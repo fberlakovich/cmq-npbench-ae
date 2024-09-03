@@ -1,0 +1,29 @@
+{
+    "benchmark": {
+        "name": "ph_wdist",
+        "short_name": "ph_wdist",
+        "relative_path": "phoronix/wdist",
+        "module_name": "wdist",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "wdist",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "N",
+                "A",
+                "B",
+                "W"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "A",
+            "B",
+            "W"
+        ],
+        "output_args": []
+    }
+}

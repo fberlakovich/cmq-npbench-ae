@@ -1,0 +1,24 @@
+{
+    "benchmark": {
+        "name": "ph_rosen",
+        "short_name": "ph_rosen",
+        "relative_path": "phoronix/rosen",
+        "module_name": "rosen",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "rosen",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "r"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "r"
+        ],
+        "output_args": []
+    }
+}

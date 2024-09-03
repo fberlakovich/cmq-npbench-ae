@@ -1,0 +1,25 @@
+{
+    "benchmark": {
+        "name": "ph_create_grid",
+        "short_name": "ph_create_grid",
+        "relative_path": "phoronix/create_grid",
+        "module_name": "create_grid",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "create_grid",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "N",
+                "x"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "x"
+        ],
+        "output_args": []
+    }
+}

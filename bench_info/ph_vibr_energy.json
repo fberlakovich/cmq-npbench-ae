@@ -1,0 +1,29 @@
+{
+    "benchmark": {
+        "name": "ph_vibr_energy",
+        "short_name": "ph_vibr_energy",
+        "relative_path": "phoronix/vibr_energy",
+        "module_name": "vibr_energy",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "vibr_energy",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "N",
+                "a",
+                "b",
+                "c"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "a",
+            "b",
+            "c"
+        ],
+        "output_args": []
+    }
+}

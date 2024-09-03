@@ -1,0 +1,26 @@
+{
+    "benchmark": {
+        "name": "ph_harris",
+        "short_name": "ph_harris",
+        "relative_path": "phoronix/harris",
+        "module_name": "harris",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "harris",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "M",
+                "N",
+                "I"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "I"
+        ],
+        "output_args": []
+    }
+}

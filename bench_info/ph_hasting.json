@@ -1,0 +1,26 @@
+{
+    "benchmark": {
+        "name": "ph_hasting",
+        "short_name": "ph_hasting",
+        "relative_path": "phoronix/hasting",
+        "module_name": "hasting",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "hasting",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "y",
+                "args"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "y",
+            "*args"
+        ],
+        "output_args": []
+    }
+}

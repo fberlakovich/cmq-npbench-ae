@@ -1,0 +1,25 @@
+{
+    "benchmark": {
+        "name": "ph_grouping",
+        "short_name": "ph_grouping",
+        "relative_path": "phoronix/grouping",
+        "module_name": "grouping",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "grouping",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "N",
+                "values"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "values"
+        ],
+        "output_args": []
+    }
+}

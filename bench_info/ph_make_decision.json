@@ -1,0 +1,26 @@
+{
+    "benchmark": {
+        "name": "ph_make_decision",
+        "short_name": "ph_make_decision",
+        "relative_path": "phoronix/make_decision",
+        "module_name": "make_decision",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "make_decision",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "s",
+                "sc"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "s",
+            "sc"
+        ],
+        "output_args": []
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "benchmark": {
+        "name": "ph_reverse_cumsum",
+        "short_name": "ph_reverse_cumsum",
+        "relative_path": "phoronix/reverse_cumsum",
+        "module_name": "reverse_cumsum",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "reverse_cumsum",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "r"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "r"
+        ],
+        "output_args": []
+    }
+}

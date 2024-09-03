@@ -1,8 +1,10 @@
 # Copyright 2021 ETH Zurich and the NPBench authors. All rights reserved.
 import json
+import sys
+import textwrap
+
 import numpy as np
 import pathlib
-import pkg_resources
 
 from npbench.infrastructure import Benchmark
 from typing import Any, Callable, Dict, Sequence, Tuple
@@ -31,7 +33,7 @@ class Framework(object):
 
     def version(self) -> str:
         """ Returns the framework version. """
-        return pkg_resources.get_distribution(self.fname).version
+        return f"{sys.version}\nNumpy {np.version.version} ({np.version.git_revision})"
 
     def imports(self) -> Dict[str, Any]:
         """ Returns a dictionary any modules and methods needed for running
@@ -78,6 +80,36 @@ class Framework(object):
             raise e
 
         return [(ldict['impl'], 'default')]
+
+    def module_functions(self, bench: Benchmark) -> Sequence[Callable]:
+        """ Returns the framework's implementations for a particular benchmark.
+        :param bench: A benchmark.
+        :returns: A list of the benchmark implementations.
+        """
+
+        module_pypath = "npbench.benchmarks.{r}.{m}".format(r=bench.info["relative_path"].replace('/', '.'),
+                                                            m=bench.info["module_name"])
+        if "postfix" in self.info.keys():
+            postfix = self.info["postfix"]
+        else:
+            postfix = self.fname
+        module_str = "{m}_{p}".format(m=module_pypath, p=postfix)
+
+        ldict = dict()
+        try:
+            code = textwrap.dedent("""
+            import inspect
+            import {m} as m
+            module_functions = [f for f in vars(m).values() if inspect.isfunction(f)]
+            """.format(m=module_str))
+            exec(code, ldict)
+        except Exception as e:
+            raise e
+
+        return ldict['module_functions']
+
+    def save_statistics(self, connection, bench, experiment_id):
+        return None
 
     def args(self, bench: Benchmark, impl: Callable = None):
         """ Generates the input arguments that should be used for calling

@@ -1,0 +1,26 @@
+{
+    "benchmark": {
+        "name": "ph_slowparts",
+        "short_name": "ph_slowparts",
+        "relative_path": "phoronix/slowparts",
+        "module_name": "slowparts",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "slowparts",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "d",
+                "re",
+                "params"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "*params"
+        ],
+        "output_args": []
+    }
+}

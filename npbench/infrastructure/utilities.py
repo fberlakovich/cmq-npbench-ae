@@ -1,11 +1,11 @@
 # Copyright 2021 ETH Zurich and the NPBench authors. All rights reserved.
 import argparse
-import numpy as np
 import sqlite3
 import timeit
-
 from numbers import Number
-from typing import Any, Dict, Union
+from typing import Union
+
+import numpy as np
 
 
 # From https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse
@@ -86,15 +86,17 @@ CREATE TABLE IF NOT EXISTS results (
     version text NOT NULL,
     details text,
     validated integer,
-    time real
+    time real,
+    experiment_id text,
+    host text
 );
 """
 
 sql_insert_into_results_table = """
 INSERT INTO results(
     timestamp, benchmark, kind, domain, dwarf, preset, mode,
-    framework, version, details, validated, time
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    framework, version, details, validated, time, experiment_id
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 """
 
 sql_create_lcounts_table = """
@@ -121,30 +123,58 @@ INSERT INTO lcounts(
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 """
 
-timeit_tmpl = """
-def inner(_it, _timer{init}):
-    {setup}
-    _t0 = _timer()
-    for _i in _it:
-        {stmt}
-    _t1 = _timer()
-    return _t1 - _t0, {output}
+sql_create_statistics_table = """
+CREATE TABLE IF NOT EXISTS statistics (
+    id integer PRIMARY KEY,
+    experiment_id integer,
+    opcode integer,
+    opcode_name TEXT,
+    base_opcode integer,
+    base_opcode_name TEXT,
+    benchmark text NOT NULL,
+    function text NOT NULL,
+    offset INT NOT NULL,
+    exec_count INT NOT NULL,
+    exec_ms INT NOT NULL,
+    specialization_attempts INT NOT NULL,
+    cache_id INT,
+    in_bench BOOLEAN NOT NULL,
+    filename TEXT NOT NULL,
+    FOREIGN KEY(cache_id) REFERENCES cache(id))
+"""
+
+sql_create_cache_table = """
+CREATE TABLE IF NOT EXISTS cache (
+    id integer PRIMARY KEY,
+    experiment_id integer,
+    opname TEXT NOT NULL,
+    exponent_type_misses INT NOT NULL,
+    iterator_cache_hits INT NOT NULL,
+    iterator_cache_misses INT NOT NULL,
+    iterator_case INT NOT NULL,
+    left_type_misses INT NOT NULL,
+    right_type_misses INT NOT NULL,
+    ndims_misses INT NOT NULL,
+    op_exec_count INT NOT NULL,
+    refcnt_misses INT NOT NULL,
+    result_cache_hits INT NOT NULL,
+    result_cache_misses INT NOT NULL,
+    shape_misses INT NOT NULL,
+    state TEXT NOT NULL,
+    temp_elision_hits INT NOT NULL,
+    trivial_cache_hits INT NOT NULL,
+    trivial_cache_misses INT NOT NULL,
+    trivial_case INT NOT NULL,
+    ufunc_type_misses INT NOT NULL,
+    last_state TEXT NOT NULL,
+    function_end_clear INT NOT NULL,
+    trivial_cache_init INT NOT NULL,
+    iterator_cache_init INT NOT NULL,
+    benchmark text NOT NULL
+    )
 """
 
 
-def benchmark(stmt, setup="pass", out_text="", repeat=1, context={}, output=None, verbose=True):
-
-    timeit.template = timeit_tmpl.format(init='{init}', setup='{setup}', stmt='{stmt}', output=output)
-
-    ldict = {**context}
-    output = timeit.repeat(stmt, setup=setup, repeat=repeat, number=1, globals=ldict)
-    res = output[0][1]
-    raw_time_list = [a for a, _ in output]
-    raw_time = np.median(raw_time_list)
-    ms_time = time_to_ms(raw_time)
-    if verbose:
-        print("{}: {}ms".format(out_text, ms_time))
-    return res, raw_time_list
 
 
 def validate(ref, val, framework="Unknown", rtol=1e-5, atol=1e-8, norm_error=1e-5):
@@ -171,3 +201,10 @@ def validate(ref, val, framework="Unknown", rtol=1e-5, atol=1e-8, norm_error=1e-
     if not valid:
         print("{} did not validate!".format(framework))
     return valid
+
+
+def build_sql_insert(table, key_vals):
+    columns = ', '.join(key_vals.keys())
+    placeholders = ', '.join('?' * len(key_vals))
+    sql = f'INSERT INTO {table} ({columns}) VALUES ({placeholders})'
+    return sql

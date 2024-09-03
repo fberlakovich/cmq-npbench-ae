@@ -1,0 +1,33 @@
+{
+    "benchmark": {
+        "name": "ph_periodic_dist",
+        "short_name": "ph_periodic_dist",
+        "relative_path": "phoronix/periodic_dist",
+        "module_name": "periodic_dist",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "periodic_dist",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "N",
+                "x",
+                "L",
+                "periodic"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "x",
+            "x",
+            "x",
+            "L",
+            "periodic",
+            "periodic",
+            "periodic"
+        ],
+        "output_args": []
+    }
+}

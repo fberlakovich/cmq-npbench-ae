@@ -1,0 +1,25 @@
+{
+    "benchmark": {
+        "name": "ph_repeating",
+        "short_name": "ph_repeating",
+        "relative_path": "phoronix/repeating",
+        "module_name": "repeating",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "repeating",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "a"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "a",
+            "20"
+        ],
+        "output_args": []
+    }
+}

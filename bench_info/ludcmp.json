@@ -1,6 +1,6 @@
 {
     "benchmark": {
-        "name": "LU Decomposition",
+        "name": "LU Decomposition CMP",
         "short_name": "ludcmp",
         "relative_path": "polybench/ludcmp",
         "module_name": "ludcmp",

@@ -1,0 +1,24 @@
+{
+    "benchmark": {
+        "name": "ph_specialconvolve",
+        "short_name": "ph_specialconvolve",
+        "relative_path": "phoronix/specialconvolve",
+        "module_name": "specialconvolve",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "specialconvolve",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "r"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "r"
+        ],
+        "output_args": []
+    }
+}

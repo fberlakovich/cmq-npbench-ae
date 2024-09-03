@@ -63,7 +63,7 @@ class NumbaFramework(Framework):
                 implementations.append((ldict['impl'], impl_name))
             except ImportError:
                 continue
-            except Exception:
+            except Exception as e:
                 print("Failed to load the {r} {f} implementation.".format(r=self.info["full_name"], f=impl_name))
                 continue
 

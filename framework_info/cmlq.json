@@ -1,0 +1,10 @@
+ {
+    "framework": {
+        "simple_name": "cmlq",
+        "full_name": "CMLQ",
+        "prefix": "np",
+        "postfix": "numpy",
+        "class": "CMLQFramework",
+        "arch": "cpu"
+    }
+}

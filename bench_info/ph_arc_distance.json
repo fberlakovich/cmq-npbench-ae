@@ -1,0 +1,31 @@
+{
+    "benchmark": {
+        "name": "ph_arc_distance",
+        "short_name": "ph_arc_distance",
+        "relative_path": "phoronix/arc_distance",
+        "module_name": "arc_distance",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "arc_distance",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "N",
+                "t0",
+                "p0",
+                "t1",
+                "p1"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "t0",
+            "p0",
+            "t1",
+            "p1"
+        ],
+        "output_args": []
+    }
+}

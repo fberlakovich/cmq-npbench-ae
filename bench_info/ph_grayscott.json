@@ -1,0 +1,26 @@
+{
+    "benchmark": {
+        "name": "ph_grayscott",
+        "short_name": "ph_grayscott",
+        "relative_path": "phoronix/grayscott",
+        "module_name": "grayscott",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "grayscott",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": []
+        },
+        "array_args": [],
+        "input_args": [
+            "40",
+            "0.16",
+            "0.08",
+            "0.04",
+            "0.06"
+        ],
+        "output_args": []
+    }
+}

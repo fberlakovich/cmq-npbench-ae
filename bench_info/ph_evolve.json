@@ -1,0 +1,30 @@
+{
+    "benchmark": {
+        "name": "ph_evolve",
+        "short_name": "ph_evolve",
+        "relative_path": "phoronix/evolve",
+        "module_name": "evolve",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "evolve",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "grid_shape",
+                "grid",
+                "block_low",
+                "block_high",
+                "grid[block_low:block_high",
+                "block_low:block_high]"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "grid",
+            "0.1"
+        ],
+        "output_args": []
+    }
+}

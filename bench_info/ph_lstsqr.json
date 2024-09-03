@@ -1,0 +1,27 @@
+{
+    "benchmark": {
+        "name": "ph_lstsqr",
+        "short_name": "ph_lstsqr",
+        "relative_path": "phoronix/lstsqr",
+        "module_name": "lstsqr",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "lstsqr",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "N",
+                "X",
+                "Y"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "X",
+            "Y"
+        ],
+        "output_args": []
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "benchmark": {
+        "name": "ph_local_maxima",
+        "short_name": "ph_local_maxima",
+        "relative_path": "phoronix/local_maxima",
+        "module_name": "local_maxima",
+        "parameters": {
+            "builtin": {}
+        },
+        "func_name": "local_maxima",
+        "init": {
+            "func_name": "initialize",
+            "input_args": [],
+            "output_args": [
+                "shape",
+                "x"
+            ]
+        },
+        "array_args": [],
+        "input_args": [
+            "x"
+        ],
+        "output_args": []
+    }
+}

@@ -17,7 +17,7 @@ if __name__ == "__main__":
                         default="numpy")
     parser.add_argument("-p",
                         "--preset",
-                        choices=['S', 'M', 'L', 'paper'],
+                        choices=['S', 'M', 'L', 'paper', 'builtin'],
                         nargs="?",
                         default='S')
     parser.add_argument("-m", "--mode", type=str, nargs="?", default="main")
@@ -42,9 +42,11 @@ if __name__ == "__main__":
                         type=util.str2bool,
                         nargs="?",
                         default=False)
+    parser.add_argument("--experiment-id",
+                        dest='experiment_id',
+                        type=str)
+    parser.add_argument("--database", default='npbench.db')
     args = vars(parser.parse_args())
-
-    # print(args)
 
     bench = Benchmark(args["benchmark"])
     frmwrk = generate_framework(args["framework"],
@@ -53,5 +55,5 @@ if __name__ == "__main__":
     numpy = generate_framework("numpy")
     lcount = LineCount(bench, frmwrk, numpy)
     lcount.count()
-    test = Test(bench, frmwrk, numpy)
-    test.run(args["preset"], args["validate"], args["repeat"], args["timeout"])
+    test = Test(bench, frmwrk, numpy, args['experiment_id'])
+    test.run(args["preset"], args["validate"], args["repeat"], args["timeout"], database=args['database'])

@@ -56,7 +56,10 @@ class Benchmark(object):
                 print("Module Python file {m} could not be opened.".format(m=module_filename))
                 raise (e)
             # 4. Execute initialization
-            init_str = "{oargs} = {i}({iargs})".format(oargs=",".join(self.info["init"]["output_args"]),
+            oargs = ",".join(self.info["init"]["output_args"])
+            if len(oargs) > 0:
+                oargs += " = "
+            init_str = "{oargs}{i}({iargs})".format(oargs=oargs,
                                                        i=self.info["init"]["func_name"],
                                                        iargs=",".join(self.info["init"]["input_args"]))
             exec(init_str, data)
@@ -64,3 +67,6 @@ class Benchmark(object):
 
         self.bdata[preset] = data
         return self.bdata[preset]
+
+    def is_phoronix_benchmark(self):
+        return "phoronix" in self.info["relative_path"]

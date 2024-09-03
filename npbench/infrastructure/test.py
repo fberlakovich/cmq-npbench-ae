@@ -1,17 +1,22 @@
 # Copyright 2021 ETH Zurich and the NPBench authors. All rights reserved.
+import socket
 import time
+import timeit
 
 from npbench.infrastructure import (Benchmark, Framework, timeout_decorator as tout, utilities as util)
 from typing import Any, Callable, Dict, Sequence, Tuple
+
+import numpy as np
 
 
 class Test(object):
     """ A class for testing a framework on a benchmark. """
 
-    def __init__(self, bench: Benchmark, frmwrk: Framework, npfrmwrk: Framework = None):
+    def __init__(self, bench: Benchmark, frmwrk: Framework, npfrmwrk: Framework = None, experiment_id: str = None):
         self.bench = bench
         self.frmwrk = frmwrk
         self.numpy = npfrmwrk
+        self.experiment_id = experiment_id
 
     def _execute(self, frmwrk: Framework, impl: Callable, impl_name: str, mode: str, bdata: Dict[str, Any], repeat: int,
                  ignore_errors: bool) -> Tuple[Any, Sequence[float]]:
@@ -28,8 +33,12 @@ class Test(object):
             return None, None
         ldict = {'__npb_impl': impl, '__npb_copy': copy, **bdata}
         try:
-            out, timelist = util.benchmark(exec_str, setup_str, report_str + " - " + mode, repeat, ldict,
-                                           '__npb_result')
+            if self.bench.is_phoronix_benchmark():
+                bench_fun = Test.benchmark_phoronix
+            else:
+                bench_fun = Test.benchmark
+            out, timelist = bench_fun(exec_str, setup_str, report_str + " - " + mode, repeat, ldict,
+                                      '__npb_result')
         except Exception as e:
             print("Failed to execute the {} implementation.".format(report_str))
             print(e)
@@ -47,7 +56,8 @@ class Test(object):
             out += [ldict[a] for a in self.frmwrk.args(self.bench)]
         return out, timelist
 
-    def run(self, preset: str, validate: bool, repeat: int, timeout: float = 200.0, ignore_errors: bool = True):
+    def run(self, preset: str, validate: bool, repeat: int, timeout: float = 200.0, ignore_errors: bool = True,
+            database='npbench.db'):
         """ Tests the framework against the benchmark.
         :param preset: The preset to use for testing (S, M, L, paper).
         :param validate: If true, it validates the output against NumPy.
@@ -56,6 +66,11 @@ class Test(object):
         print("***** Testing {f} with {b} on the {p} dataset *****".format(b=self.bench.bname,
                                                                            f=self.frmwrk.info["full_name"],
                                                                            p=preset))
+
+        gather_statistics = callable(getattr(np.core.multiarray, 'get_cmlq_stats', None))
+
+        if gather_statistics:
+            print("Statistics functions found in NumPy installation. Enabling statistics collection...")
 
         bdata = self.bench.get_data(preset)
 
@@ -122,15 +137,22 @@ class Test(object):
                     bvalues.append(dict(details=impl_name, validated=valid, time=t))
 
         # create a database connection
-        database = r"npbench.db"
         conn = util.create_connection(database)
 
         # create tables
         if conn is not None:
             # create results table
             util.create_table(conn, util.sql_create_results_table)
+
+            if gather_statistics:
+                util.create_table(conn, util.sql_create_statistics_table)
+                util.create_table(conn, util.sql_create_cache_table)
         else:
             print("Error! cannot create the database connection.")
+
+        if gather_statistics:
+            print(f"Saving statistics to {database}")
+            self.frmwrk.save_statistics(conn, self.bench, self.experiment_id)
 
         # Write data
         timestamp = int(time.time())
@@ -147,8 +169,54 @@ class Test(object):
                 'version': version,
                 'details': d["details"],
                 'validated': d["validated"],
-                'time': d["time"]
+                'time': d["time"],
+                'experiment_id': self.experiment_id,
+                'host': socket.gethostname()
             }
-            result = tuple(new_d.values())
             # print(result)
-            util.create_result(conn, util.sql_insert_into_results_table, result)
+            util.create_result(conn, util.build_sql_insert("results", new_d), tuple(new_d.values()))
+
+    timeit_tmpl = """
+def inner(_it, _timer{init}):
+    {setup}
+    _t0 = _timer()
+    for _i in _it:
+        {stmt}
+    _t1 = _timer()
+    return _t1 - _t0, {output}
+    """
+
+    @staticmethod
+    def benchmark(stmt, setup="pass", out_text="", repeat=1, context={}, output=None, verbose=True):
+        timeit.template = Test.timeit_tmpl.format(init='{init}', setup='{setup}', stmt='{stmt}', output=output)
+
+        ldict = {**context}
+        output = timeit.repeat(stmt, setup=setup, repeat=repeat, number=1, globals=ldict)
+        res = output[0][1]
+        raw_time_list = [a for a, _ in output]
+        raw_time = np.median(raw_time_list)
+        print(raw_time_list)
+        ms_time = util.time_to_ms(raw_time)
+        if verbose:
+            print("{}: {}ms".format(out_text, ms_time))
+        return res, raw_time_list
+
+    @staticmethod
+    def benchmark_phoronix(stmt, setup="pass", out_text="", repeat=1, context={}, output=None, verbose=True):
+        """ This reflects the benchmarking logic used in benchit.py of the Phoronix benchmarks """
+        timeit.template = Test.timeit_tmpl.format(init='{init}', setup='{setup}', stmt='{stmt}', output=output)
+
+        ldict = {**context}
+        number = 40
+        output = timeit.repeat(stmt, setup=setup, repeat=repeat, number=number, globals=ldict)
+        res = output[0][1]
+        raw_time_list = [a for a, _ in output]
+        if verbose:
+            print("raw times:", " ".join(["%.*g" % (3, x) for x in raw_time_list]))
+
+        time_scaled = [(x * 1e6 / number) for x in raw_time_list]
+        raw_time = np.median(time_scaled)
+        print(time_scaled)
+        if verbose:
+            print("{}: {}ns".format(out_text, raw_time))
+        return res, time_scaled
