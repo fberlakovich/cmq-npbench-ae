@@ -44,8 +44,8 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--dace", type=util.str2bool, nargs="?", default=False)
     parser.add_argument("--numpy-threads", type=int, default=16, dest='numpy_threads')
     parser.add_argument("--numba-threads", type=int, default=16, dest='numba_threads')
-    parser.add_argument("--test-papi", default=True)
-    parser.add_argument("--output", default='table', choices=['table', 'figure', 'stats'])
+    parser.add_argument("--test-papi", default=False, action='store_true')
+    parser.add_argument("--output", default='none', choices=['none', 'table', 'figure', 'stats'])
     parser.add_argument("--database", default='npbench.db')
 
     subcommands = parser.add_subparsers(dest='subcommand')
@@ -73,6 +73,7 @@ if __name__ == "__main__":
         parsed.timeout = 120.0
         parsed.test_papi = False
 
+    benchmarks = []
     if len(parsed.benchmarks) == 1 and parsed.benchmarks[0] == "all":
         benchmarks = bench_info.all_benchmarks
     elif len(parsed.benchmarks) == 1 and parsed.benchmarks[0] == "cmlq":

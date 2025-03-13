@@ -28,8 +28,8 @@ RUN source venv_baseline/bin/activate \
 RUN mkdir ~/.ssh
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-RUN --mount=type=ssh git clone git@github.com:fberlakovich/cmq-ae.git cpython
-RUN --mount=type=ssh git clone git@github.com:fberlakovich/cmq-numpy-ae.git numpy
+RUN  git clone https://github.com/fberlakovich/cmq-ae.git cpython
+RUN  git clone https://github.com/fberlakovich/cmq-numpy-ae.git numpy
 
 RUN cd cpython  \
   && ./configure --prefix="$PWD"/localinstall --with-cmlq=always \
